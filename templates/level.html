@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ level_info.name }} Level - CyberQuest</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Game Header -->
+        <header class="game-header">
+            <div class="game-header-content">
+                <h1>{{ level_info.icon }} {{ level_info.name }} Level</h1>
+                <p class="player-name">Player: <strong>{{ username }}</strong></p>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <p class="progress-text" id="progress-text">Question 1 of {{ questions|length }}</p>
+            </div>
+        </header>
+
+        <!-- Score Display -->
+        <div class="score-display">
+            <div class="score-item">
+                <span class="score-label">Score:</span>
+                <span class="score-value" id="current-score">0</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Possible:</span>
+                <span class="score-value" id="max-score">{{ questions|sum(attribute='points') }}</span>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div class="quiz-container" id="quiz-container">
+            {% for question in questions %}
+            <div class="question-card" id="question-{{ loop.index }}" data-question-id="{{ question.id }}" style="display: {% if loop.index == 1 %}block{% else %}none{% endif %}">
+                <div class="question-header">
+                    <span class="question-category">{{ question.category }}</span>
+                    <span class="question-points">{{ question.points }} points</span>
+                </div>
+                
+                <h2 class="question-text">{{ question.question }}</h2>
+                
+                <div class="options-container">
+                    {% for option in question.options %}
+                    <label class="option-label">
+                        <input type="radio" name="question-{{ question.id }}" value="{{ loop.index0 }}" class="option-radio">
+                        <span class="option-text">{{ option }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+
+                <div class="question-navigation">
+                    {% if loop.index > 1 %}
+                    <button class="btn btn-secondary prev-btn" onclick="navigateQuestion({{ loop.index - 1 }})">
+                        ← Previous
+                    </button>
+                    {% else %}
+                    <div></div>
+                    {% endif %}
+
+                    {% if loop.index < questions|length %}
+                    <button class="btn btn-primary next-btn" onclick="navigateQuestion({{ loop.index + 1 }})">
+                        Next →
+                    </button>
+                    {% else %}
+                    <button class="btn btn-success" id="submit-btn" onclick="submitQuiz()">
+                        Submit Answers 🎯
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Answer Summary (Hidden initially) -->
+        <div class="answer-summary" id="answer-summary" style="display: none;">
+            <h3>📋 Your Answers Summary</h3>
+            <p>Review your answers before submitting:</p>
+            <div id="summary-content"></div>
+            <div class="summary-actions">
+                <button class="btn btn-secondary" onclick="closeSummary()">Review Answers</button>
+                <button class="btn btn-success" onclick="confirmSubmit()">Confirm & Submit</button>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loading-overlay" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Calculating your results...</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='game.js') }}"></script>
+    <script>
+        // Initialize game data
+        const gameData = {
+            level: '{{ level }}',
+            questions: {{ questions|tojson }},
+            currentQuestion: 1,
+            answers: {},
+            score: 0
+        };
+
+        // Initialize progress
+        updateProgress();
+
+        function updateProgress() {
+            const progress = (gameData.currentQuestion / gameData.questions.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = 
+                `Question ${gameData.currentQuestion} of ${gameData.questions.length}`;
+        }
+
+        function navigateQuestion(questionNumber) {
+            // Save current answer
+            const currentCard = document.getElementById(`question-${gameData.currentQuestion}`);
+            const currentQuestionId = currentCard.dataset.questionId;
+            const selectedOption = currentCard.querySelector('input[type="radio"]:checked');
+            
+            if (selectedOption) {
+                gameData.answers[currentQuestionId] = parseInt(selectedOption.value);
+            }
+
+            // Hide current question
+            currentCard.style.display = 'none';
+
+            // Show target question
+            gameData.currentQuestion = questionNumber;
+            document.getElementById(`question-${questionNumber}`).style.display = 'block';
+
+            // Update progress
+            updateProgress();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function submitQuiz() {
+            // Save last answer
+            const currentCard = document.getElementById(`question-${gameData.currentQuestion}`);
+            const currentQuestionId = currentCard.dataset.questionId;
+            const selectedOption = currentCard.querySelector('input[type="radio"]:checked');
+            
+            if (selectedOption) {
+                gameData.answers[currentQuestionId] = parseInt(selectedOption.value);
+            }
+
+            // Check if all questions are answered
+            const unansweredCount = gameData.questions.length - Object.keys(gameData.answers).length;
+            
+            if (unansweredCount > 0) {
+                if (!confirm(`You have ${unansweredCount} unanswered question(s). Submit anyway?`)) {
+                    return;
+                }
+            }
+
+            // Show summary
+            showSummary();
+        }
+
+        function showSummary() {
+            const summaryContent = document.getElementById('summary-content');
+            let html = '<div class="summary-list">';
+
+            gameData.questions.forEach((question, index) => {
+                const questionId = question.id.toString();
+                const answer = gameData.answers[questionId];
+                const status = answer !== undefined ? '✅' : '❌';
+                const answerText = answer !== undefined ? question.options[answer] : 'Not answered';
+
+                html += `
+                    <div class="summary-item">
+                        <span class="summary-status">${status}</span>
+                        <div class="summary-details">
+                            <strong>Q${index + 1}:</strong> ${question.category}
+                            <br>
+                            <em>${answerText}</em>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            summaryContent.innerHTML = html;
+
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('answer-summary').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function closeSummary() {
+            document.getElementById('answer-summary').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+        }
+
+        async function confirmSubmit() {
+            // Show loading
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            try {
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        level: gameData.level,
+                        answers: gameData.answers
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to submit answers'));
+                    document.getElementById('loading-overlay').style.display = 'none';
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+                document.getElementById('loading-overlay').style.display = 'none';
+            }
+        }
+
+        // Auto-save answers
+        document.querySelectorAll('.option-radio').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const questionCard = this.closest('.question-card');
+                const questionId = questionCard.dataset.questionId;
+                gameData.answers[questionId] = parseInt(this.value);
+            });
+        });
+    </script>
+</body>
+</html>

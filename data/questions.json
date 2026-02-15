@@ -1,0 +1,233 @@
+{
+  "beginner": [
+    {
+      "id": 1,
+      "type": "phishing",
+      "question": "You receive an email from 'accounts@paypa1-security.com' asking you to verify your account immediately. What should you do?",
+      "options": [
+        "Click the link and enter your password",
+        "Delete the email - it's a phishing attempt",
+        "Forward it to your friends to warn them",
+        "Reply asking for more information"
+      ],
+      "correct": 1,
+      "explanation": "This is a classic phishing email! Notice the suspicious domain 'paypa1' (with number 1 instead of 'l'). Legitimate companies never ask for passwords via email. Always verify by going directly to the official website.",
+      "points": 10,
+      "category": "Phishing Detection"
+    },
+    {
+      "id": 2,
+      "type": "password",
+      "question": "Which of these is the STRONGEST password?",
+      "options": [
+        "password123",
+        "P@ssw0rd!2024",
+        "Tr0p!c@l$unset#Mango42",
+        "MyBirthday1990"
+      ],
+      "correct": 2,
+      "explanation": "The strongest password is long (16+ characters), uses a mix of upper/lowercase, numbers, symbols, AND isn't based on dictionary words or personal info. 'Tr0p!c@l$unset#Mango42' combines all these elements!",
+      "points": 10,
+      "category": "Password Security"
+    },
+    {
+      "id": 3,
+      "type": "website",
+      "question": "You want to buy something online. Which URL indicates a SECURE website?",
+      "options": [
+        "http://amazonsale.com/deals",
+        "https://www.amazon.com",
+        "www.amazon-deals.tk",
+        "http://amazon.cheapdeals.net"
+      ],
+      "correct": 1,
+      "explanation": "Look for 'https://' (S = Secure) and the official domain! The padlock icon in your browser also indicates encryption. Avoid suspicious domains like .tk or misspelled variations.",
+      "points": 10,
+      "category": "Safe Browsing"
+    },
+    {
+      "id": 4,
+      "type": "social_engineering",
+      "question": "A stranger calls claiming to be from IT support, asking for your login credentials to 'fix your computer'. What do you do?",
+      "options": [
+        "Give them the information - they're from IT!",
+        "Ask for their employee ID and callback number, then verify with your company",
+        "Hang up immediately without verifying",
+        "Give them partial information to test if they're real"
+      ],
+      "correct": 1,
+      "explanation": "This is social engineering! Real IT support never asks for passwords. Always verify by calling back through official channels. Attackers rely on urgency and authority to trick you.",
+      "points": 10,
+      "category": "Social Engineering"
+    },
+    {
+      "id": 5,
+      "type": "malware",
+      "question": "You receive a popup saying 'Your computer is infected! Click here to clean it now!' What should you do?",
+      "options": [
+        "Click the button to clean your computer",
+        "Close the popup and run your actual antivirus software",
+        "Call the phone number shown on the popup",
+        "Download the recommended software"
+      ],
+      "correct": 1,
+      "explanation": "This is scareware - fake security warnings designed to trick you into downloading malware! Close the popup, never click anything, and run your legitimate antivirus software.",
+      "points": 10,
+      "category": "Malware Awareness"
+    }
+  ],
+  "intermediate": [
+    {
+      "id": 6,
+      "type": "phishing",
+      "question": "You receive an email with subject 'Urgent: Your package is delayed'. The email has correct company branding and a tracking link. How do you verify it's legitimate?",
+      "options": [
+        "Click the tracking link in the email",
+        "Check the sender's email address carefully and verify on the company's official website directly",
+        "Trust it because it looks professional",
+        "Forward to friends asking their opinion"
+      ],
+      "correct": 1,
+      "explanation": "Advanced phishing emails can look very professional! Always verify the sender's EXACT email address. Go directly to the company's official website instead of clicking email links. Check for subtle domain variations like 'fedex-tracking.com' vs 'fedex.com'.",
+      "points": 15,
+      "category": "Phishing Detection"
+    },
+    {
+      "id": 7,
+      "type": "2fa",
+      "question": "What is the MOST secure form of Two-Factor Authentication (2FA)?",
+      "options": [
+        "SMS text message codes",
+        "Email verification codes",
+        "Hardware security key (like YubiKey)",
+        "Security questions"
+      ],
+      "correct": 2,
+      "explanation": "Hardware security keys are the most secure 2FA method! SMS can be intercepted (SIM swapping), emails can be hacked, and security questions can be guessed. Physical keys require direct possession and resist phishing.",
+      "points": 15,
+      "category": "Two-Factor Authentication"
+    },
+    {
+      "id": 8,
+      "type": "public_wifi",
+      "question": "You're at a coffee shop and need to check your bank account. The shop offers free WiFi. What's the SAFEST approach?",
+      "options": [
+        "Use the public WiFi directly - it's convenient",
+        "Use your mobile data or connect through a VPN",
+        "Only check non-sensitive sites on public WiFi",
+        "Ask the staff if the WiFi is secure"
+      ],
+      "correct": 1,
+      "explanation": "Public WiFi is easily intercepted! Attackers can set up fake hotspots or sniff traffic. For sensitive activities (banking, email), use mobile data or a trusted VPN that encrypts your connection.",
+      "points": 15,
+      "category": "Safe Browsing"
+    },
+    {
+      "id": 9,
+      "type": "password",
+      "question": "Your favorite gaming website was hacked and user passwords were leaked. You use the same password on multiple sites. What should you do FIRST?",
+      "options": [
+        "Change the password only on the hacked website",
+        "Wait to see if your other accounts are compromised",
+        "Immediately change passwords on ALL sites where you used that password",
+        "Delete all your accounts"
+      ],
+      "correct": 2,
+      "explanation": "Password reuse is dangerous! When one site is breached, hackers try those credentials everywhere (credential stuffing). Change that password EVERYWHERE immediately, then use unique passwords for each site. Consider a password manager!",
+      "points": 15,
+      "category": "Password Security"
+    },
+    {
+      "id": 10,
+      "type": "social_engineering",
+      "question": "A LinkedIn message from a 'recruiter' at a major company offers an amazing job. They want to interview you via a suspicious video chat platform you've never heard of. Red flag?",
+      "options": [
+        "It's fine - recruiters use different platforms",
+        "Verify the recruiter on LinkedIn and suggest a known platform like Zoom or Teams",
+        "Download the platform - you don't want to miss this opportunity!",
+        "Share your resume with personal details immediately"
+      ],
+      "correct": 1,
+      "explanation": "This could be a sophisticated social engineering attack! Fake recruiters trick people into downloading malware or stealing personal info. Always verify through official company websites and use established platforms.",
+      "points": 15,
+      "category": "Social Engineering"
+    }
+  ],
+  "advanced": [
+    {
+      "id": 11,
+      "type": "encryption",
+      "question": "What is end-to-end encryption, and why is it important for messaging apps?",
+      "options": [
+        "Encryption that only protects data during transmission",
+        "Encryption where only sender and recipient can read messages - not even the service provider",
+        "Encryption that requires a physical key",
+        "Encryption only for passwords"
+      ],
+      "correct": 1,
+      "explanation": "End-to-end encryption (E2EE) means messages are encrypted on your device and only decrypted on the recipient's device. Even the service provider can't read them! Apps like Signal use E2EE. This protects against data breaches and surveillance.",
+      "points": 20,
+      "category": "Encryption Basics"
+    },
+    {
+      "id": 12,
+      "type": "ransomware",
+      "question": "Your computer files are encrypted and a message demands $500 in Bitcoin to unlock them. What's the BEST response?",
+      "options": [
+        "Pay immediately to get your files back",
+        "Disconnect from network, don't pay, report to authorities, restore from backups",
+        "Try to decrypt the files yourself",
+        "Ignore it - the files will unlock eventually"
+      ],
+      "correct": 1,
+      "explanation": "This is ransomware! Never pay - it funds criminals and doesn't guarantee file recovery. Immediately disconnect to prevent spread, report to authorities (FBI IC3), and restore from your offline backups. This is why regular backups are crucial!",
+      "points": 20,
+      "category": "Malware Awareness"
+    },
+    {
+      "id": 13,
+      "type": "zero_day",
+      "question": "A 'zero-day vulnerability' is discovered in popular software. What does this mean?",
+      "options": [
+        "The software will stop working in zero days",
+        "A security flaw unknown to the vendor with no patch available yet",
+        "Free software that costs zero dollars",
+        "Software that was released today"
+      ],
+      "correct": 1,
+      "explanation": "A zero-day is a vulnerability that's being exploited BEFORE the vendor knows about it or can create a patch. These are extremely dangerous because there's 'zero days' of protection. Stay updated, use security software, and follow security news!",
+      "points": 20,
+      "category": "Advanced Threats"
+    },
+    {
+      "id": 14,
+      "type": "data_privacy",
+      "question": "A mobile app requests permissions for: Camera, Microphone, Contacts, Location, and Storage. It's a simple flashlight app. Should you grant these permissions?",
+      "options": [
+        "Yes - all apps need these permissions",
+        "No - flashlight apps only need camera permission for LED access, others are suspicious",
+        "Yes - but only Location for better service",
+        "It doesn't matter - apps can't do anything harmful"
+      ],
+      "correct": 1,
+      "explanation": "This is over-permissioning - a red flag! A flashlight only needs camera/LED access. Requesting Contacts, Microphone, Location suggests data harvesting. Always check app permissions and deny unnecessary ones. Privacy matters!",
+      "points": 20,
+      "category": "Data Privacy"
+    },
+    {
+      "id": 15,
+      "type": "incident_response",
+      "question": "You accidentally clicked a suspicious email link on your work computer. What should you do IMMEDIATELY?",
+      "options": [
+        "Keep working and hope nothing happens",
+        "Disconnect from network, report to IT security immediately, change passwords from a clean device",
+        "Run a virus scan and continue working",
+        "Delete the email and forget about it"
+      ],
+      "correct": 1,
+      "explanation": "Quick incident response is critical! Disconnect to prevent lateral movement, report to IT/security team immediately (no shame - it happens!), and change credentials from a clean device. Fast action can prevent a major breach. Being honest saves the company!",
+      "points": 20,
+      "category": "Incident Response"
+    }
+  ]
+}

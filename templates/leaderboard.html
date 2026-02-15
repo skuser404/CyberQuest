@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - CyberQuest</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="leaderboard-header">
+            <h1>🏆 Leaderboard</h1>
+            <p>Top CyberQuest Champions</p>
+        </header>
+
+        <!-- Current Player Info -->
+        {% if username %}
+        <div class="current-player-info">
+            <p>Logged in as: <strong>{{ username }}</strong></p>
+        </div>
+        {% endif %}
+
+        <!-- Leaderboard Table -->
+        <div class="leaderboard-container">
+            {% if scores %}
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th class="rank-col">Rank</th>
+                        <th class="player-col">Player</th>
+                        <th class="level-col">Level</th>
+                        <th class="score-col">Score</th>
+                        <th class="percentage-col">Accuracy</th>
+                        <th class="badge-col">Achievement</th>
+                        <th class="date-col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for score in scores %}
+                    <tr class="{% if username and score.username == username %}current-player-row{% endif %}">
+                        <td class="rank-col">
+                            {% if loop.index == 1 %}
+                                <span class="rank-medal gold">🥇</span>
+                            {% elif loop.index == 2 %}
+                                <span class="rank-medal silver">🥈</span>
+                            {% elif loop.index == 3 %}
+                                <span class="rank-medal bronze">🥉</span>
+                            {% else %}
+                                <span class="rank-number">{{ loop.index }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="player-col">
+                            <strong>{{ score.username }}</strong>
+                        </td>
+                        <td class="level-col">
+                            <span class="level-badge level-{{ score.level }}">
+                                {% if score.level == 'beginner' %}
+                                    🌱 Beginner
+                                {% elif score.level == 'intermediate' %}
+                                    🔥 Intermediate
+                                {% elif score.level == 'advanced' %}
+                                    🚀 Advanced
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td class="score-col">
+                            <strong>{{ score.score }}</strong> / {{ score.max_score }}
+                        </td>
+                        <td class="percentage-col">
+                            <span class="percentage-badge" style="
+                                background-color: {% if score.percentage >= 90 %}#10b981{% elif score.percentage >= 75 %}#3b82f6{% elif score.percentage >= 60 %}#f59e0b{% elif score.percentage >= 40 %}#f97316{% else %}#ef4444{% endif %};
+                            ">
+                                {{ score.percentage }}%
+                            </span>
+                        </td>
+                        <td class="badge-col">
+                            {% if 'Cyber Defender' in score.risk_level %}
+                                🛡️
+                            {% elif 'Security Aware' in score.risk_level %}
+                                🔐
+                            {% elif 'Safe User' in score.risk_level %}
+                                🔒
+                            {% elif 'At Risk' in score.risk_level %}
+                                ⚠️
+                            {% else %}
+                                🚨
+                            {% endif %}
+                            <span class="badge-text">{{ score.risk_level }}</span>
+                        </td>
+                        <td class="date-col">
+                            {{ score.played_at|string|truncate(10, True, '') }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-leaderboard">
+                <p>🎮 No scores yet! Be the first to play!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Achievement Levels Info -->
+        <div class="achievement-info">
+            <h2>🎯 Achievement Levels</h2>
+            <div class="achievement-grid">
+                <div class="achievement-card">
+                    <span class="achievement-emoji">🛡️</span>
+                    <h3>Cyber Defender</h3>
+                    <p>90%+ accuracy - Security expert level</p>
+                </div>
+                <div class="achievement-card">
+                    <span class="achievement-emoji">🔐</span>
+                    <h3>Security Aware</h3>
+                    <p>75-89% accuracy - Strong knowledge</p>
+                </div>
+                <div class="achievement-card">
+                    <span class="achievement-emoji">🔒</span>
+                    <h3>Safe User</h3>
+                    <p>60-74% accuracy - Good foundation</p>
+                </div>
+                <div class="achievement-card">
+                    <span class="achievement-emoji">⚠️</span>
+                    <h3>At Risk</h3>
+                    <p>40-59% accuracy - Keep learning</p>
+                </div>
+                <div class="achievement-card">
+                    <span class="achievement-emoji">🚨</span>
+                    <h3>High Risk</h3>
+                    <p>Below 40% - Study needed</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="leaderboard-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">🎮 Play Game</a>
+            {% if username %}
+            <a href="{{ url_for('reset_session') }}" class="btn btn-secondary">🚪 Change Player</a>
+            {% endif %}
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>🛡️ CyberQuest - Compete and Learn!</p>
+        </footer>
+    </div>
+</body>
+</html>

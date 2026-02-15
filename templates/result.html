@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - CyberQuest</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Results Header -->
+        <header class="results-header">
+            <h1>📊 Your Results</h1>
+            <p class="player-name">Player: <strong>{{ username }}</strong></p>
+        </header>
+
+        <!-- Risk Assessment Card -->
+        <div class="risk-card" style="border-color: {{ result.risk_color }}">
+            <div class="risk-emoji" style="color: {{ result.risk_color }}">{{ result.risk_emoji }}</div>
+            <h2 class="risk-level" style="color: {{ result.risk_color }}">{{ result.risk_level }}</h2>
+            <p class="risk-description">{{ result.risk_description }}</p>
+            
+            <div class="score-summary">
+                <div class="score-big">
+                    <span class="score-big-value">{{ result.score }}</span>
+                    <span class="score-big-max">/ {{ result.max_score }}</span>
+                </div>
+                <div class="percentage-big" style="color: {{ result.risk_color }}">
+                    {{ result.percentage }}%
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Performance Chart -->
+        <div class="chart-container">
+            <h2>📈 Performance by Category</h2>
+            <canvas id="categoryChart"></canvas>
+        </div>
+
+        <!-- Detailed Feedback -->
+        <div class="feedback-section">
+            <h2>📝 Detailed Feedback</h2>
+            {% for item in result.feedback %}
+            <div class="feedback-item {% if item.is_correct %}correct{% else %}incorrect{% endif %}">
+                <div class="feedback-header">
+                    <span class="feedback-icon">
+                        {% if item.is_correct %}✅{% else %}❌{% endif %}
+                    </span>
+                    <span class="feedback-category">{{ item.category }}</span>
+                    <span class="feedback-points">
+                        {{ item.points_earned }}/{{ item.points_possible }} points
+                    </span>
+                </div>
+                
+                <h3 class="feedback-question">{{ item.question }}</h3>
+                
+                <div class="feedback-answers">
+                    <div class="feedback-answer">
+                        <strong>Your answer:</strong>
+                        <span class="{% if item.is_correct %}answer-correct{% else %}answer-wrong{% endif %}">
+                            {{ item.user_answer }}
+                        </span>
+                    </div>
+                    
+                    {% if not item.is_correct %}
+                    <div class="feedback-answer">
+                        <strong>Correct answer:</strong>
+                        <span class="answer-correct">{{ item.correct_answer }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="feedback-explanation">
+                    <strong>💡 Explanation:</strong>
+                    <p>{{ item.explanation }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Improvement Suggestions -->
+        {% if result.suggestions %}
+        <div class="suggestions-section">
+            <h2>🎯 Focus Areas for Improvement</h2>
+            {% for suggestion in result.suggestions %}
+            <div class="suggestion-card priority-{{ suggestion.priority }}">
+                <div class="suggestion-header">
+                    <h3>{{ suggestion.category }}</h3>
+                    <span class="suggestion-badge priority-{{ suggestion.priority }}">
+                        {% if suggestion.priority == 'high' %}🔴{% else %}🟡{% endif %}
+                        {{ suggestion.priority|upper }}
+                    </span>
+                </div>
+                <p class="suggestion-performance">{{ suggestion.performance }}</p>
+                <p class="suggestion-text">{{ suggestion.recommendation }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Learning Resources -->
+        <div class="resources-section">
+            <h2>📚 Learning Resources</h2>
+            <div class="resources-grid">
+                {% for category, resource in learning_resources.items() %}
+                <div class="resource-card">
+                    <h3>{{ category }}</h3>
+                    <div class="resource-tips">
+                        <strong>Key Tips:</strong>
+                        <ul>
+                            {% for tip in resource.tips %}
+                            <li>{{ tip }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="resource-links">
+                        <strong>Learn More:</strong>
+                        <ul>
+                            {% for link in resource.resources %}
+                            <li><a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ link|truncate(50) }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="results-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">🔄 Play Again</a>
+            <a href="{{ url_for('leaderboard') }}" class="btn btn-secondary">🏆 View Leaderboard</a>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>🛡️ CyberQuest - Keep Learning, Stay Secure!</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='charts.js') }}"></script>
+    <script>
+        // Category performance data
+        const categoryData = {{ result.category_stats|tojson }};
+        
+        // Prepare chart data
+        const categories = Object.keys(categoryData);
+        const correctCounts = categories.map(cat => categoryData[cat].correct);
+        const totalCounts = categories.map(cat => categoryData[cat].total);
+        const percentages = categories.map(cat => categoryData[cat].percentage);
+
+        // Create chart
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: categories,
+                datasets: [{
+                    label: 'Correct Answers',
+                    data: correctCounts,
+                    backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                    borderColor: 'rgba(16, 185, 129, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'Incorrect Answers',
+                    data: totalCounts.map((total, i) => total - correctCounts[i]),
+                    backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                    borderColor: 'rgba(239, 68, 68, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            afterLabel: function(context) {
+                                const categoryIndex = context.dataIndex;
+                                return `Accuracy: ${percentages[categoryIndex]}%`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberQuest - Cybersecurity Awareness Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="hero">
+            <div class="hero-content">
+                <h1 class="title">🛡️ CyberQuest</h1>
+                <p class="subtitle">Master Cybersecurity Through Interactive Challenges</p>
+                <div class="hero-description">
+                    <p>🎮 Learn to protect yourself from phishing, malware, and cyber threats</p>
+                    <p>📚 Understand real-world security scenarios</p>
+                    <p>🏆 Challenge yourself and climb the leaderboard</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Why Cyber Awareness Section -->
+        <section class="info-section">
+            <h2>🔒 Why Cybersecurity Matters</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">💰</div>
+                    <h3>$4.45 Million</h3>
+                    <p>Average cost of a data breach in 2023</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">📧</div>
+                    <h3>3.4 Billion</h3>
+                    <p>Phishing emails sent daily worldwide</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">⏱️</div>
+                    <h3>Every 11 Seconds</h3>
+                    <p>A business falls victim to ransomware</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">🎯</div>
+                    <h3>95% of Breaches</h3>
+                    <p>Are caused by human error</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Start Game Section -->
+        <section class="start-section">
+            <h2>🚀 Start Your Cybersecurity Journey</h2>
+            
+            <div class="username-input-container">
+                <input type="text" id="username" placeholder="Enter your username..." maxlength="50">
+                <p class="input-hint">Choose a unique username (3-50 characters)</p>
+                <p id="username-error" class="error-message"></p>
+            </div>
+
+            <h3>Choose Your Difficulty Level</h3>
+            
+            <div class="levels-grid">
+                {% for level_key, level_data in levels.items() %}
+                <div class="level-card" data-level="{{ level_key }}" style="border-color: {{ level_data.color }}">
+                    <div class="level-icon" style="color: {{ level_data.color }}">{{ level_data.icon }}</div>
+                    <h3 class="level-name">{{ level_data.name }}</h3>
+                    <p class="level-description">{{ level_data.description }}</p>
+                    <div class="level-stats">
+                        <span>📝 {{ question_counts.get(level_key, 0) }} Questions</span>
+                    </div>
+                    <button class="btn btn-primary start-btn" data-level="{{ level_key }}">
+                        Start {{ level_data.name }}
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Learning Objectives -->
+        <section class="learning-section">
+            <h2>🎯 What You'll Learn</h2>
+            <div class="learning-grid">
+                <div class="learning-item">
+                    <span class="learning-emoji">🎣</span>
+                    <h4>Phishing Detection</h4>
+                    <p>Identify fake emails and malicious links</p>
+                </div>
+                <div class="learning-item">
+                    <span class="learning-emoji">🔑</span>
+                    <h4>Password Security</h4>
+                    <p>Create unbreakable passwords</p>
+                </div>
+                <div class="learning-item">
+                    <span class="learning-emoji">🎭</span>
+                    <h4>Social Engineering</h4>
+                    <p>Recognize manipulation tactics</p>
+                </div>
+                <div class="learning-item">
+                    <span class="learning-emoji">🌐</span>
+                    <h4>Safe Browsing</h4>
+                    <p>Navigate the web securely</p>
+                </div>
+                <div class="learning-item">
+                    <span class="learning-emoji">🦠</span>
+                    <h4>Malware Awareness</h4>
+                    <p>Spot and avoid malicious software</p>
+                </div>
+                <div class="learning-item">
+                    <span class="learning-emoji">🔐</span>
+                    <h4>Two-Factor Auth</h4>
+                    <p>Secure your accounts effectively</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leaderboard Link -->
+        <section class="leaderboard-link-section">
+            <a href="{{ url_for('leaderboard') }}" class="btn btn-secondary">
+                🏆 View Leaderboard
+            </a>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>🛡️ CyberQuest - Educational Cybersecurity Game</p>
+            <p>Built for learning purposes | Stay safe online! 🔒</p>
+        </footer>
+    </div>
+
+    <script>
+        // Username validation
+        const usernameInput = document.getElementById('username');
+        const usernameError = document.getElementById('username-error');
+        const startButtons = document.querySelectorAll('.start-btn');
+
+        function validateUsername(username) {
+            if (!username || username.trim().length === 0) {
+                return { valid: false, message: 'Username cannot be empty' };
+            }
+            
+            if (username.length < 3) {
+                return { valid: false, message: 'Username must be at least 3 characters' };
+            }
+            
+            if (username.length > 50) {
+                return { valid: false, message: 'Username must be less than 50 characters' };
+            }
+            
+            if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+                return { valid: false, message: 'Username can only contain letters, numbers, - and _' };
+            }
+            
+            return { valid: true, message: '' };
+        }
+
+        // Start game
+        startButtons.forEach(button => {
+            button.addEventListener('click', async function() {
+                const level = this.dataset.level;
+                const username = usernameInput.value.trim();
+                
+                // Validate username
+                const validation = validateUsername(username);
+                
+                if (!validation.valid) {
+                    usernameError.textContent = validation.message;
+                    usernameInput.focus();
+                    return;
+                }
+                
+                usernameError.textContent = '';
+                
+                // Disable button and show loading
+                this.disabled = true;
+                this.textContent = 'Starting...';
+                
+                try {
+                    const response = await fetch('/start', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, level })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                    } else {
+                        usernameError.textContent = data.error || 'Failed to start game';
+                        this.disabled = false;
+                        this.textContent = `Start ${level}`;
+                    }
+                } catch (error) {
+                    usernameError.textContent = 'Network error. Please try again.';
+                    this.disabled = false;
+                    this.textContent = `Start ${level}`;
+                }
+            });
+        });
+
+        // Clear error on input
+        usernameInput.addEventListener('input', function() {
+            usernameError.textContent = '';
+        });
+    </script>
+</body>
+</html>
