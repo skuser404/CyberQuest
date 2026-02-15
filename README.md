@@ -56,24 +56,24 @@ CyberQuest is a **free, web-based cybersecurity training game** designed to make
 
 ```
 ┌─────────────────────────────────────────────┐
-│             FRONTEND                         │
+│             FRONTEND                        │
 │  HTML5 | CSS3 | JavaScript | Chart.js       │
-└─────────────────┬───────────────────────────┘
-                  │ HTTP/JSON
-┌─────────────────▼───────────────────────────┐
+└─────────────────────┬───────────────────────┘
+                      │ HTTP/JSON
+┌─────────────────────▼────────────────────────┐
 │             BACKEND                          │
-│  Python 3.8+ | Flask 3.0 | Jinja2          │
+│  Python 3.8+ | Flask 3.0 | Jinja2            │
 │                                              │
 │  Modules:                                    │
-│  • app.py (routes & controllers)            │
-│  • game_logic.py (scoring & assessment)     │
-│  • questions.py (question management)       │
-│  • database.py (data persistence)           │
-│  • utils.py (helpers & validation)          │
-└─────────────────┬───────────────────────────┘
-                  │
-┌─────────────────▼───────────────────────────┐
-│            DATABASE                          │
+│  • app.py (routes & controllers)             │
+│  • game_logic.py (scoring & assessment)      │
+│  • questions.py (question management)        │
+│  • database.py (data persistence)            │
+│  • utils.py (helpers & validation)           │
+└─────────────────────┬────────────────────────┘
+                      │
+┌─────────────────────▼───────────────────────┐
+│            DATABASE                         │
 │  SQLite 3 (players, scores, attempts)       │
 │  JSON (question bank)                       │
 └─────────────────────────────────────────────┘
