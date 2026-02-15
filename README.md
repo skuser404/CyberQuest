@@ -420,11 +420,11 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ## 👨‍💻 Author Details
 
 **Project**: CyberQuest - Cybersecurity Awareness Game  
-**Created By**: Dr. Research Scholar  
-**Occupation**: Machine Learning Research Scientist (NLP & Sentiment Analysis)  
+**Created By**: G Sunil Kumar
+**Occupation**: Cybersecurity
 **GitHub**: [@skuser404](https://github.com/skuser404)  
 **Purpose**: Educational cybersecurity training through gamification  
-**Year**: 2024  
+**Year**: 2025  
 
 ### About the Author
 Accomplished research scientist with expertise in machine learning, natural language processing, and sentiment analysis. Specializes in developing innovative solutions for social media analytics and interactive educational systems. Passionate about bridging the gap between academic research and practical applications in cybersecurity education.
